@@ -186,9 +186,8 @@ impl Instrument {
                         continue;
                     }
                 }
-                l += voice.volume
-                    * interpolate(&voice.sample.left, sample_index, sample_index + 1, ratio);
-                r += voice.volume * voice.sample.right[sample_index];
+                l += voice.volume * interpolate(&voice.sample.left, sample_index, ratio);
+                r += voice.volume * interpolate(&voice.sample.right, sample_index, ratio);
                 voice.time += voice.time_delta;
             }
         }
@@ -196,8 +195,8 @@ impl Instrument {
     }
 }
 
-fn interpolate(data: &[f32], idx_a: usize, idx_b: usize, ratio: f32) -> f32 {
-    let a = data.get(idx_a).copied().unwrap_or_default();
-    let b = data.get(idx_b).copied().unwrap_or_default();
+fn interpolate(data: &[f32], idx: usize, ratio: f32) -> f32 {
+    let a = data.get(idx).copied().unwrap_or_default();
+    let b = data.get(idx + 1).copied().unwrap_or_default();
     a * (1.0 - ratio) + b * ratio
 }
